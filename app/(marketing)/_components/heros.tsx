@@ -22,7 +22,7 @@ const Heros = () => {
           <Image
             src="/reading.png"
             fill
-            className="object-contain hidden"
+            className="object-contain dark:hidden"
             alt="Reading"
           />
           <Image
