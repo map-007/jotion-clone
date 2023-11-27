@@ -1,17 +1,30 @@
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon, PlusCircle } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  Plus,
+  PlusCircle,
+  Search,
+  Settings,
+  Trash,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import UserItem from "./user-item";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Item from "./item";
+import { toast } from "sonner";
+import { DocumentList } from "./document-list";
+import { Popover } from "@/components/ui/popover";
+import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 
 const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const documents = useQuery(api.document.get);
+  const create = useMutation(api.document.create);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -95,6 +108,16 @@ const Navigation = () => {
     }
   };
 
+  const handleCreate = () => {
+    const promise = create({ title: "Untitled" });
+
+    toast.promise(promise, {
+      loading: "Creating a new note...",
+      success: "New note created!",
+      error: "Failed to create a new note",
+    });
+  };
+
   return (
     <>
       <aside
@@ -115,16 +138,24 @@ const Navigation = () => {
         >
           <ChevronsLeft className="h-6 w-6" />
         </div>
-        <UserItem/>
-        <Item
-          onClick={() => {}}
-          label="New page"
-          icon={PlusCircle}
-        />
+        <UserItem />
+        <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+        <Item label="Setting" icon={Settings} onClick={() => {}} />
+        <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         <div className="mt-4">
-            {documents?.map((document) => (
-              <p>{document.title}</p>
-            ))}
+          <DocumentList />
+          <Item onClick={handleCreate} label="Add a Page" icon={Plus} />
+          <Popover>
+            <PopoverTrigger className="w-full mt-4">
+              <Item label="Trash" icon={Trash}/>
+            </PopoverTrigger>
+            <PopoverContent
+              className="p-0 w-72"
+              side={isMobile ? "bottom" : "right"}
+            >
+              <p>Trash Box</p>
+            </PopoverContent>
+          </Popover>
         </div>
         <div
           onMouseDown={handleMouseDown}
