@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { DocumentList } from "./document-list";
 import { Popover } from "@/components/ui/popover";
 import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import TrashBox from "./trash-box";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -153,7 +154,7 @@ const Navigation = () => {
               className="p-0 w-72"
               side={isMobile ? "bottom" : "right"}
             >
-              <p>Trash Box</p>
+              <TrashBox/>
             </PopoverContent>
           </Popover>
         </div>
