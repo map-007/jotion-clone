@@ -20,8 +20,12 @@ import { DocumentList } from "./document-list";
 import { Popover } from "@/components/ui/popover";
 import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import TrashBox from "./trash-box";
+import { useSearch } from "@/hooks/use-search";
+import { useSettings } from "@/hooks/use-settings";
 
 const Navigation = () => {
+  const search = useSearch();
+  const setting = useSettings();
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const documents = useQuery(api.document.get);
@@ -140,21 +144,21 @@ const Navigation = () => {
           <ChevronsLeft className="h-6 w-6" />
         </div>
         <UserItem />
-        <Item label="Search" icon={Search} isSearch onClick={() => {}} />
-        <Item label="Setting" icon={Settings} onClick={() => {}} />
+        <Item label="Search" icon={Search} isSearch onClick={search.onOpen} />
+        <Item label="Setting" icon={Settings} onClick={setting.onOpen} />
         <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         <div className="mt-4">
           <DocumentList />
           <Item onClick={handleCreate} label="Add a Page" icon={Plus} />
           <Popover>
             <PopoverTrigger className="w-full mt-4">
-              <Item label="Trash" icon={Trash}/>
+              <Item label="Trash" icon={Trash} />
             </PopoverTrigger>
             <PopoverContent
               className="p-0 w-72"
               side={isMobile ? "bottom" : "right"}
             >
-              <TrashBox/>
+              <TrashBox />
             </PopoverContent>
           </Popover>
         </div>
